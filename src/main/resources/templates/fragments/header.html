@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body>
+<!-- Header Fragment -->
+<header th:fragment="header" class="custom-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <!-- Mobile Sidebar Toggle -->
+            <button th:if="${session.user.role.id==1 or session.user.role.id==3}" class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+
+            <div class="navbar-nav me-auto d-flex flex-row">
+                <div class="nav-item dropdown" th:if="${session.user.role.id != 1 and session.user.role.id != 3}">
+                    <a class="nav-link dropdown-toggle" href="#" id="equipmentDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Equipment
+                    </a>
+                    <div class="dropdown-menu p-4" aria-labelledby="equipmentDropdown" style="width: 500px; background-color: #ededed;">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="dropdown-header">Equipment</h6>
+                                <a class="dropdown-item" href="#">Parallettes</a>
+                                <a class="dropdown-item" href="#">Dip Belt</a>
+                                <a class="dropdown-item" href="#">Dip Bars</a>
+                                <a class="dropdown-item" href="#">Static Bar</a>
+                                <a class="dropdown-item" href="#">Workout Rings</a>
+                                <a class="dropdown-item" href="#">Pull Up Bars</a>
+                                <a class="dropdown-item" href="#">Weight Vests</a>
+                                <a class="dropdown-item" href="#">More Equipment</a>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="dropdown-header">Accessories</h6>
+                                <a class="dropdown-item" href="#">Resistance Bands</a>
+                                <a class="dropdown-item" href="#">Wrist Wraps</a>
+                                <a class="dropdown-item" href="#">Sleeves</a>
+                                <a class="dropdown-item" href="#">Chalk</a>
+                                <a class="dropdown-item" href="#">Tape & Grips</a>
+                                <a class="dropdown-item" href="#">Bags & Backpacks</a>
+                                <a class="dropdown-item" href="#">Shakers & Bottles</a>
+                                <a class="dropdown-item" href="#">More Accessories</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="nav-link" href="#" th:if="${session.user.role.id != 1 and session.user.role.id != 3}">About Us</a>
+            </div>
+
+            <!-- Center Brand -->
+            <a class="navbar-brand" href="#">CAGT</a>
+
+            <!-- Right User Actions -->
+            <div class="user-actions d-flex align-items-center">
+                <div class="dropdown">
+                    <a class="btn dropdown-toggle p-0 border-0 bg-transparent user-icon" href="#" role="button"
+                       id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user text-white"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cart Icon (only for role = 2) -->
+                <div th:if="${session.user.role.id==2}" class="ms-3">
+                    <a href="#" class="cart-icon position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

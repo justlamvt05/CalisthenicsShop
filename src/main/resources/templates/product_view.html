@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Product</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Header and Sidebar -->
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-box"></i> View Product
+                </h1>
+            </div>
+
+            <!-- Product Information -->
+            <div class="controls-section">
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">Product Name:</label>
+                    <div class="col-sm-9 pt-2" th:text="${product.name}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">Description:</label>
+                    <div class="col-sm-9 pt-2" th:text="${product.description}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">Summary:</label>
+                    <div class="col-sm-9 pt-2" th:text="${product.summary}"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">Status:</label>
+                    <div class="col-sm-9 pt-2">
+                        <span th:text="${product.status} ? 'Active' : 'Inactive'"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label class="col-sm-3 col-form-label">Created At:</label>
+                    <div class="col-sm-9 pt-2" th:text="${#temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
+                </div>
+
+                <!-- Images -->
+                <div class="row mb-4">
+                    <label class="col-sm-3 col-form-label">Images:</label>
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-md-3 mb-2" th:each="img : ${product.images}">
+                                <img th:src="@{${img.imageUrl}}" class="img-fluid rounded shadow-sm border">
+                                <div class="text-muted small text-center mt-1" th:text="${img.isPrimary ? 'Primary' : 'Secondary'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SKUs -->
+                <div class="row mb-4">
+                    <label class="col-sm-3 col-form-label">Product SKUs:</label>
+                    <div class="col-sm-9">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Size</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sku : ${product.skus}">
+                                <td th:text="${sku.sku}"></td>
+                                <td th:text="${sku.sizeAttribute != null ? sku.sizeAttribute.value : '-'}"></td>
+                                <td th:text="${sku.price}"></td>
+                                <td th:text="${sku.quantity}"></td>
+                                <td th:text="${sku.status ? 'Active' : 'Inactive'}"></td>
+                                <td th:text="${#temporals.format(sku.createdAt, 'dd/MM/yyyy')}"></td>
+                            </tr>
+                            <tr th:if="${product.skus.isEmpty()}">
+                                <td colspan="6" class="text-center text-muted">No SKUs available</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a th:href="@{/sale}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <a th:href="@{|/sale/${product.id}/edit|}" class="btn btn-warning" style="color: white">
+                        <i class="fas fa-edit"></i>Edit Product
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+
+</body>
+</html>

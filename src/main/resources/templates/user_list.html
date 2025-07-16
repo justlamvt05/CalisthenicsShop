@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin – User List</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header fragment -->
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}" class="custom-header"></div>
+
+<!-- Sidebar -->
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-users"></i>
+                    User Management
+                </h1>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a th:href="@{/admin/add}" class="add-user-btn btn" title="Add User">
+                        <i class="fas fa-plus me-2"></i>Add User
+                    </a>
+                </div>
+
+                <form class="row mb-3" th:action="@{/admin}" method="get">
+                    <div class="col-md-3 mb-3">
+                        <select class="form-select" name="roleId" aria-label="Role filter"
+                                th:attr="onchange='this.form.submit()'">
+                            <option value="">All roles</option>
+                            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"
+                                    th:selected="${role.id==roleId}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <select class="form-select" name="status" aria-label="Status filter"
+                                th:attr="onchange='this.form.submit()'">
+                            <option value="" th:selected="${status==null}">All status</option>
+                            <option value="true" th:selected="${status==true}">Active</option>
+                            <option value="false" th:selected="${status==false}">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control" name="searchText"
+                                   th:value="${searchText}" placeholder="Search users..."
+                                   onkeydown="if(event.key==='Enter') this.form.submit()"/>
+                        </div>
+                    </div>
+                    <!-- Hidden fields -->
+                    <input type="hidden" name="sortField" th:value="${sortField}"/>
+                    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+                    <input type="hidden" name="size" th:value="${pageSize}"/>
+                </form>
+            </div>
+
+            <!-- User Table -->
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                <a th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=0,size=${pageSize},sortField='id',sortDir=${reverseSortDir})}">
+                                    ID
+                                    <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=0,size=${pageSize},sortField='firstName',sortDir=${reverseSortDir})}">
+                                    First Name
+                                    <span th:if="${sortField == 'firstName'}"
+                                          th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                                </a>
+                            </th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>
+                                <a th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=0,size=${pageSize},sortField='role.name',sortDir=${reverseSortDir})}">
+                                    Role
+                                    <span th:if="${sortField == 'role.name'}"
+                                          th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                                </a>
+                            </th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="u : ${pageUsers.content}">
+                            <td th:text="${u.id}"></td>
+                            <td th:text="${u.firstName}"></td>
+                            <td th:text="${u.lastName}"></td>
+                            <td th:text="${u.email}"></td>
+                            <td>
+                                    <span class="role-badge"
+                                          th:classappend="${u.roleId == 1 ? 'role-admin' : (u.roleId == 2 ? 'role-customer' : 'role-saler')}"
+                                          th:text="${u.roleId == 1 ? 'Admin' : (u.roleId == 2 ? 'Customer' : (u.roleId == 3 ? 'Sale' : '-'))}">
+                                    </span>
+                            </td>
+                            <td th:text="${u.phoneNumber != null ? u.phoneNumber : '-'}"></td>
+                            <td>
+                                <a th:href="@{'/admin/' + ${u.id} + '/toggle_status'(roleId=${roleId},status=${status},page=${currentPage}, searchText=${searchText}, sortField=${sortField}, sortDir=${sortDir})}"
+                                   th:text="${u.status == true ? 'Active' : 'Inactive'}"
+                                   th:classappend="${u.status ? 'status-active' : 'status-inactive'}">
+                                </a>
+                            </td>
+                            <td>
+
+                                <a th:href="@{|/admin/${u.id}/view|}" class="action-btn btn btn-sm" title="View User">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a th:href="@{|/admin/${u.id}/edit|}" class="action-btn btn btn-sm" title="Edit User">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${pageUsers.totalElements == 0}">
+                            <td colspan="8" class="text-center" style="color: #ccc; padding: 40px;">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                                <br>No users found
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container" th:if="${pageUsers.totalPages > 1}">
+                <nav>
+                    <ul class="pagination">
+                        <!-- Previous -->
+                        <li class="page-item" th:classappend="${pageUsers.first} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=${currentPage - 1},size=${pageSize},sortField=${sortField},sortDir=${sortDir})}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        <!-- Page numbers -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(1, pageUsers.totalPages)}"
+                            th:classappend="${i == currentPage + 1} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=${i - 1},size=${pageSize},sortField=${sortField},sortDir=${sortDir})}"
+                               th:text="${i}">
+                            </a>
+                        </li>
+
+                        <!-- Next -->
+                        <li class="page-item" th:classappend="${pageUsers.last} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/admin(roleId=${roleId},status=${status},searchText=${searchText},page=${currentPage + 1},size=${pageSize},sortField=${sortField},sortDir=${sortDir})}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+</body>
+</html>

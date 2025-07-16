@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>User Profile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header and Sidebar -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-user"></i>
+                    User Profile
+                </h1>
+            </div>
+            <div class="controls-section">
+                <form th:action="@{/user/update}" th:object="${profileForm}" method="post" enctype="multipart/form-data">
+
+                    <input type="hidden" th:field="*{user.id}" />
+                    <input type="hidden" th:field="*{user.role.id}" />
+                    <input type="hidden" th:field="*{user.status}" value="true" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Avatar</label>
+                        <div class="mb-2">
+                            <img id="avatarPreview" th:src="@{${profileForm.user.avatar}}" alt="Avatar"
+                                 style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+                        </div>
+                        <input type="file" class="form-control" id="avatarFile" name="avatarFile" accept="image/*" onchange="previewAvatar(event)">
+                        <input type="hidden" th:field="*{user.avatar}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" th:field="*{user.firstName}" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" th:field="*{user.lastName}" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" th:field="*{user.username}" required />
+                        <div class="text-danger" th:if="${#fields.hasErrors('user.username')}" th:errors="*{user.username}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{user.email}" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" th:field="*{user.password}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" th:field="*{user.phoneNumber}" />
+                        <div class="text-danger" th:if="${#fields.hasErrors('user.phoneNumber')}" th:errors="*{user.phoneNumber}"></div>
+                    </div>
+
+                    <input type="hidden" th:field="*{address.id}" />
+                    <div class="mb-3">
+                        <label class="form-label">Address Line</label>
+                        <input type="text" class="form-control" th:field="*{address.addressLine}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" th:field="*{address.city}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Postal Code</label>
+                        <input type="text" class="form-control" th:field="*{address.postalCode}" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Address Phone</label>
+                        <input type="text" class="form-control" th:field="*{address.phoneNumber}" />
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+                        <a th:if="${profileForm.user.role.id == 1}" th:href="@{/admin}" class="btn btn-secondary">Back</a>
+                        <a th:if="${profileForm.user.role.id == 2}" th:href="@{/customer}" class="btn btn-secondary">Back</a>
+                        <a th:if="${profileForm.user.role.id == 3}" th:href="@{/sale}" class="btn btn-secondary">Back</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function previewAvatar(event) {
+        const fileInput = event.target;
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarPreview = document.getElementById('avatarPreview');
+                avatarPreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello sale</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">
+                    Product Management
+                </h1>
+            </div>
+            <div class="controls-section">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <a th:href="@{/sale/products/add}" class="add-user-btn btn" title="Add Product">
+                        <i class="fas fa-plus me-2"></i>Add Product
+                    </a>
+                </div>
+                <form class="row mb-3" th:action="@{/sale}" method="get">
+                    <div class="col-md-6 mb-3">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control" name="searchText"
+                                   th:value="${searchText}" placeholder="Search users..."
+                                   onkeydown="if(event.key==='Enter') this.form.submit()"/>
+                        </div>
+                    </div>
+
+                    <!-- Hidden fields -->
+                    <input type="hidden" name="sortField" th:value="${sortField}"/>
+                    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+                    <input type="hidden" name="size" th:value="${pageSize}"/>
+                </form>
+            </div>
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                <a th:href="@{/sale(page=0,searchText=${searchText},pageSize=${pageSize},sortField='id',sortDir=${reverseSortDir})}">
+                                    ID
+                                    <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                                </a>
+                            </th>
+
+                            <th>
+                                <a th:href="@{/sale(page=0,searchText=${searchText},pageSize=${pageSize},sortField='name',sortDir=${reverseSortDir})}">
+                                    Name
+                                    <span th:if="${sortField == 'name'}"
+                                          th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                                </a>
+                            </th>
+                            <th>Image</th>
+                            <th> <a th:href="@{/sale(page=0,searchText=${searchText},pageSize=${pageSize},sortField='description',sortDir=${reverseSortDir})}">
+                                Description
+                                <span th:if="${sortField == 'description'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                            </a>
+                                </th>
+                            <th>Status</th>
+                            <th><a th:href="@{/sale(page=0,searchText=${searchText},pageSize=${pageSize},sortField='createdAt',sortDir=${reverseSortDir})}">
+                                Created
+                                <span th:if="${sortField == 'createdAt'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                            </a>
+                                </th>
+                            <th><a th:href="@{/sale(page=0,searchText=${searchText},pageSize=${pageSize},sortField='updatedAt',sortDir=${reverseSortDir})}">
+                                Updated
+                                <span th:if="${sortField == 'updatedAt'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                            </a>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${pageProducts.content}">
+                            <td th:text="${p.id}"></td>
+
+                            <td th:text="${p.name}"></td>
+                            <td>
+                                <a style="color: white" th:href="@{${p.cover}}" target="_blank">
+                                    <u>Image</u>
+                                </a>
+                            </td>
+                            <td th:text="${p.description}"></td>
+                            <td>
+                                <a th:href="@{'/sale/' + ${p.id} + '/toggle_status_product'(page=${currentPage}, searchText=${searchText}, sortField=${sortField}, sortDir=${sortDir})}"
+                                   th:text="${p.status == true ? 'Active' : 'Inactive'}"
+                                   th:classappend="${p.status ? 'status-active' : 'status-inactive'}">
+                                </a>
+                            </td>
+                            <td th:text="${#temporals.format(p.createdAt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#temporals.format(p.updatedAt, 'dd/MM/yyyy')}"></td>
+                            <td>
+                                <a th:href="@{|/sale/${p.id}/view|}" class="action-btn btn btn-sm"
+                                   title="View Product">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a th:href="@{|/sale/${p.id}/edit|}" class="action-btn btn btn-sm"
+                                   title="Edit Product">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${pageProducts.totalElements == 0}">
+                            <td colspan="8" class="text-center" style="color: #ccc; padding: 40px;">
+                                <i class="fas fa-box-open"
+                                   style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                                <br>No products found
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="pagination-container" th:if="${pageProducts.totalPages > 1}">
+                <nav>
+                    <ul class="pagination">
+                        <!-- Previous -->
+                        <li class="page-item" th:classappend="${pageProducts.first} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/sale(page=${currentPage - 1}, searchText=${searchText}, pageSize=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        <!-- Page numbers -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(1, pageProducts.totalPages)}"
+                            th:classappend="${i == currentPage + 1} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/sale(page=${i - 1}, searchText=${searchText}, pageSize=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}"
+                               th:text="${i}">
+                            </a>
+                        </li>
+
+                        <!-- Next -->
+                        <li class="page-item" th:classappend="${pageProducts.last} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/sale(page=${currentPage + 1}, searchText=${searchText}, pageSize=${pageSize}, sortField=${sortField}, sortDir=${sortDir})}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+
+</html>

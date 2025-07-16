@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        ::placeholder {
+            color: #c3c3c3;
+        }
+        .img-upload-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .img-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .img-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .img-row .form-label {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* File Input Styling */
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper input[type="file"]:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper input[type="file"]::-webkit-file-upload-button:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Radio Button Styling */
+        .primary-radio-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .custom-radio {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-radio input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .custom-radio .radio-checkmark {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-radio input[type="radio"]:checked ~ .radio-checkmark {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .custom-radio input[type="radio"]:checked ~ .radio-checkmark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .custom-radio .radio-label {
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-radio:hover .radio-checkmark {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Delete Button Styling */
+        .delete-btn {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #ff3742 0%, #ff2633 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .delete-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Add Button Styling */
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .add-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* SKU Section */
+        .sku-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sku-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .sku-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+    </style>
+</head>
+<body>
+<!-- Header & Sidebar -->
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title"><i class="fas fa-pen"></i> Edit Product</h1>
+            </div>
+
+            <form th:action="@{/sale/edit}" method="post" enctype="multipart/form-data" th:object="${product}">
+                <input type="hidden" th:field="*{id}"/>
+
+                <!-- Product Info -->
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{name}" class="form-control" required/>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Description</label>
+                    <div class="col-sm-9">
+                        <textarea th:field="*{description}" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Summary</label>
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{summary}" class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label">Status</label>
+                    <div class="col-sm-9">
+                        <select th:field="*{status}" class="form-select">
+                            <option th:value="true">Active</option>
+                            <option th:value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Existing Images -->
+                <h5>Images</h5>
+                <div class="row mb-3" th:each="img, iterStat : ${product.images}">
+                    <div class="col-md-3 mb-2">
+                        <img th:src="@{${img.imageUrl}}" class="img-thumbnail mb-1">
+                        <input type="hidden" name="existingImageIds" th:value="${img.id}"/>
+                        <input type="checkbox" name="deleteImageIds" th:value="${img.id}" style="font-size: xxx-large"> Delete
+                    </div>
+                </div>
+                <div class="img-upload-container">
+                    <div id="imgContainer">
+                        <div class="img-row">
+                            <label class="form-label">Upload Images</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="newImages" class="form-control" multiple accept="image/*"/>
+                            </div>
+                            <button type="button" class="delete-btn" onclick="deleteImgRow(this.closest('.img-row'))">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addImgRow()">
+                        <i class="fas fa-plus"></i> Add More Images
+                    </button>
+                </div>
+                <!-- SKU Table -->
+                <h5>SKUs</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sku, iterStat : ${product.skus}">
+                            <td>
+                                <input type="hidden" th:name="${'skus[' + iterStat.index + '].id'}" th:value="${sku.id}"/>
+                                <input type="text" th:name="${'skus[' + iterStat.index + '].sku'}" th:value="${sku.sku}" class="form-control"/>
+                            </td>
+                            <td>
+                                <input type="text"  th:name="${'skus[' +iterStat.index +'].sizeAttribute.value'}" th:value="${sku.sizeAttribute?.value}" class="form-control"/>
+                            </td>
+                            <td>
+                                <input type="number" th:name="${'skus[' +iterStat.index +'].price'}" th:value="${sku.price}" class="form-control" step="0.01"/>
+                            </td>
+                            <td>
+                                <input type="number" th:name="${'skus[' +iterStat.index +'].quantity'}" th:value="${sku.quantity}" class="form-control"/>
+                            </td>
+                            <td>
+                                <select th:name="${'skus[' +iterStat.index +'].status'}" class="form-select">
+                                    <option th:selected="${sku.status}" value="true">Active</option>
+                                    <option th:selected="!${sku.status}" value="false">Inactive</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a th:href="@{/sale}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+<script>
+    function addImgRow() {
+        const imgContainer = document.getElementById("imgContainer");
+        const row = document.createElement('div');
+        row.className = 'img-row';
+        row.innerHTML = `
+        <label class="form-label">Upload Images</label>
+        <div class="file-input-wrapper">
+            <input type="file" name="newImages" class="form-control" accept="image/*"/>
+        </div>
+        <button type="button" class="delete-btn" onclick="deleteImgRow(this.closest('.img-row'))">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    `;
+        imgContainer.appendChild(row);
+
+    }
+
+    const deleteImgRow = (ImgElement) => {
+        ImgElement.remove();
+
+    }
+</script>
+</body>
+</html>

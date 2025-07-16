@@ -1,0 +1,23 @@
+<!-- fragments/sidebar.html -->
+<div id="sidebar" th:fragment="sidebar"
+     th:if="${session.user.role.id == 1 or session.user.role.id == 3}"
+     class="custom-sidebar">
+
+    <div class="sidebar-header">
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <div class="user-name" th:text="${session.user.firstName}">User Name</div>
+                <div class="user-role" th:text="${session.user.role.name}">Role</div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li th:if="${session.user.role.id==1}"><a href="/admin"><i class="fas fa-users"></i> User List</a></li>
+        <li th:if="${session.user.role.id==1}"><a href="/admin/products"><i class="fas fa-boxes"></i> Product List</a></li>
+        <li th:if="${session.user.role.id==3}"><a href="/sale"><i class="fas fa-boxes"></i> Product List</a></li>
+    </ul>
+</div>

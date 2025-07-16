@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+        ::placeholder {
+            color: #c3c3c3;
+        }
+        .img-upload-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .img-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .img-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .img-row .form-label {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* File Input Styling */
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper input[type="file"]:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper input[type="file"]::-webkit-file-upload-button:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Radio Button Styling */
+        .primary-radio-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .custom-radio {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-radio input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .custom-radio .radio-checkmark {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-radio input[type="radio"]:checked ~ .radio-checkmark {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .custom-radio input[type="radio"]:checked ~ .radio-checkmark::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .custom-radio .radio-label {
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-radio:hover .radio-checkmark {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Delete Button Styling */
+        .delete-btn {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #ff3742 0%, #ff2633 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .delete-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Add Button Styling */
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 10px 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .add-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* SKU Section */
+        .sku-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .sku-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .sku-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header & Sidebar -->
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}" class="sidebar"></div>
+
+<!-- Main Content -->
+<div class="main-content-wrapper" id="mainWrapper">
+    <div class="main-content">
+        <div class="container-fluid">
+            <h2><i class="fas fa-plus-circle"></i>Add New Product</h2>
+
+            <form th:action="@{/sale/products/add}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Enter product name" required/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Enter product description"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Summary</label>
+                    <input type="text" name="summary" class="form-control" placeholder="Enter product summary"/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="img-upload-container">
+                    <h5><i class="fas fa-images me-2"></i>Product Images</h5>
+                    <h6>First image is product cover</h6>
+                    <div id="imgContainer">
+                        <div class="img-row">
+                            <label class="form-label">Upload Images</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="uploadImages" class="form-control" multiple accept="image/*"/>
+                            </div>
+                            <button type="button" class="delete-btn" onclick="deleteImgRow(this.closest('.img-row'))">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addImgRow()">
+                        <i class="fas fa-plus"></i> Add More Images
+                    </button>
+                </div>
+
+                <div class="sku-container">
+                    <h5><i class="fas fa-barcode me-2"></i>SKUs</h5>
+                    <div id="skuContainer">
+                        <div class="row sku-row">
+                            <div class="col-md-2">
+                                <label class="form-label">SKU</label>
+                                <input type="text" name="skus[0].sku" class="form-control" placeholder="SKU Code" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Size</label>
+                                <input type="text" name="skus[0].sizeAttribute.value" class="form-control" placeholder="Size">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Price</label>
+                                <input type="number" name="skus[0].price" class="form-control" placeholder="0.00" step="0.01">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" name="skus[0].quantity" class="form-control" placeholder="0">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Status</label>
+                                <select name="skus[0].status" class="form-select">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="add-btn" onclick="addSkuRow()">
+                        <i class="fas fa-plus"></i> Add SKU
+                    </button>
+                </div>
+
+                <div class="action-buttons">
+                    <a th:href="@{/sale}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function addImgRow() {
+        const imgContainer = document.getElementById("imgContainer");
+        const row = document.createElement('div');
+        row.className = 'img-row';
+        row.innerHTML = `
+        <label class="form-label">Upload Images</label>
+        <div class="file-input-wrapper">
+            <input type="file" name="uploadImages" class="form-control" accept="image/*"/>
+        </div>
+        <button type="button" class="delete-btn" onclick="deleteImgRow(this.closest('.img-row'))">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    `;
+        imgContainer.appendChild(row);
+
+    }
+
+    const deleteImgRow = (ImgElement) => {
+        ImgElement.remove();
+
+    }
+
+    let skuIndex = 1;
+
+    function updateSkuIndexes() {
+        const rows = document.querySelectorAll('.sku-row');
+        rows.forEach((row, index) => {
+            row.querySelectorAll('input, select').forEach((input) => {
+                const newName = input.name.replace(/skus\[\d+]/, `skus[${index}]`);
+                input.name = newName;
+            });
+        });
+        skuIndex = rows.length;
+    }
+
+    function addSkuRow() {
+        const container = document.getElementById('skuContainer');
+        const row = document.createElement('div');
+        row.className = 'row sku-row';
+        row.innerHTML = `
+            <div class="col-md-2">
+                <label class="form-label">SKU</label>
+                <input type="text" name="skus[${skuIndex}].sku" class="form-control" placeholder="SKU Code" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Size</label>
+                <input type="text" name="skus[${skuIndex}].sizeAttribute.value" class="form-control" placeholder="Size">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Price</label>
+                <input type="number" name="skus[${skuIndex}].price" class="form-control" placeholder="0.00" step="0.01">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Quantity</label>
+                <input type="number" name="skus[${skuIndex}].quantity" class="form-control" placeholder="0">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select name="skus[${skuIndex}].status" class="form-select">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <button type="button" class="delete-btn" onclick="deleteSKURow(this.closest('.sku-row'))">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        `;
+        container.appendChild(row);
+        skuIndex++;
+    }
+
+    const deleteSKURow = (SKUElement) => {
+        SKUElement.remove();
+        updateSkuIndexes();
+    }
+</script>
+
+</body>
+</html>
