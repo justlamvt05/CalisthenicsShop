@@ -16,5 +16,5 @@ public class ProductDTO {
     private String cover;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
-    private Boolean status = true;
+    private Boolean status;
 }

@@ -28,35 +28,32 @@
                         <div class="row">
                             <div class="col-6">
                                 <h6 class="dropdown-header">Equipment</h6>
-                                <a class="dropdown-item" href="#">Parallettes</a>
-                                <a class="dropdown-item" href="#">Dip Belt</a>
-                                <a class="dropdown-item" href="#">Dip Bars</a>
-                                <a class="dropdown-item" href="#">Static Bar</a>
-                                <a class="dropdown-item" href="#">Workout Rings</a>
-                                <a class="dropdown-item" href="#">Pull Up Bars</a>
-                                <a class="dropdown-item" href="#">Weight Vests</a>
-                                <a class="dropdown-item" href="#">More Equipment</a>
+                                <a class="dropdown-item" href="/product/search?name=Parallettes">Parallettes</a>
+                                <a class="dropdown-item" href="/product/search?name=Dip%20Belt">Dip Belt</a>
+                                <a class="dropdown-item" href="/product/search?name=Dip%20Bars">Dip Bars</a>
+                                <a class="dropdown-item" href="/product/search?name=Static%20Bar">Static Bar</a>
+                                <a class="dropdown-item" href="/product/search?name=Workout%20Rings">Workout Rings</a>
+                                <a class="dropdown-item" href="/product/search?name=Pull%20Up%20Bars">Pull Up Bars</a>
+                                <a class="dropdown-item" href="/product/search?name=Weight%20Vests">Weight Vests</a>
                             </div>
                             <div class="col-6">
                                 <h6 class="dropdown-header">Accessories</h6>
-                                <a class="dropdown-item" href="#">Resistance Bands</a>
-                                <a class="dropdown-item" href="#">Wrist Wraps</a>
-                                <a class="dropdown-item" href="#">Sleeves</a>
-                                <a class="dropdown-item" href="#">Chalk</a>
-                                <a class="dropdown-item" href="#">Tape & Grips</a>
-                                <a class="dropdown-item" href="#">Bags & Backpacks</a>
-                                <a class="dropdown-item" href="#">Shakers & Bottles</a>
-                                <a class="dropdown-item" href="#">More Accessories</a>
+                                <a class="dropdown-item" href="/product/search?name=Resistance%20Band">Resistance Bands</a>
+                                <a class="dropdown-item" href="/product/search?name=Wrist%20Wrap">Wrist Wraps</a>
+                                <a class="dropdown-item" href="/product/search?name=Sleeves">Sleeves</a>
+                                <a class="dropdown-item" href="/product/search?name=Chalk">Chalk</a>
+                                <a class="dropdown-item" href="/product/search?name=Grip%20Tape">Tape & Grips</a>
+                                <a class="dropdown-item" href="/product/search?name=Bags%20%26%20Backpacks">Bags & Backpacks</a>
+                                <a class="dropdown-item" href="/product/search?name=Shakers%20%26%20Bottles">Shakers & Bottles</a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <a class="nav-link" href="#" th:if="${session.user.role.id != 1 and session.user.role.id != 3}">About Us</a>
             </div>
 
-            <!-- Center Brand -->
-            <a class="navbar-brand" href="#">CAGT</a>
+            <p th:if="${session.user.role.id==1 or session.user.role.id==3}" class="navbar-brand" >SHOP</p>
+            <a th:if="${session.user.role.id == 2}" class="navbar-brand" href="/customer">SHOP</a>
 
             <!-- Right User Actions -->
             <div class="user-actions d-flex align-items-center">
@@ -68,17 +65,19 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
+                        <li th:if="${session.user.role.id != 1 and session.user.role.id != 3}" ><a class="dropdown-item" href="/order/my-orders">My Orders</a></li>
+                        <li th:if="${session.user.role.id != 1 and session.user.role.id != 3}"><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                 </div>
 
                 <!-- Cart Icon (only for role = 2) -->
                 <div th:if="${session.user.role.id==2}" class="ms-3">
-                    <a href="#" class="cart-icon position-relative">
+                    <a href="/cart" class="cart-icon position-relative">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
                     </a>
                 </div>
+
             </div>
         </div>
     </nav>

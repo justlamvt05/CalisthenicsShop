@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -26,4 +27,14 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     void updateProductStatus(@Param("id") int id);
     @EntityGraph(attributePaths = {"images", "skus", "skus.sizeAttribute"})
     Optional<Product> findById(Integer id);
+    @Query("SELECT p FROM Product p WHERE p.status = true ORDER BY p.id ASC")
+    List<Product> findTop4(Pageable pageable);
+    @Query("SELECT p FROM Product p where p.status=true ORDER BY FUNCTION('NEWID')")
+    List<Product> findRandomProducts(Pageable pageable);
+
+
+    List<Product> findByStatusIsTrue();
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) AND p.status = true")
+    List<Product> searchByNameAndStatusTrue(@Param("keyword") String keyword);
 }

@@ -17,7 +17,8 @@
 
     <ul class="sidebar-menu">
         <li th:if="${session.user.role.id==1}"><a href="/admin"><i class="fas fa-users"></i> User List</a></li>
-        <li th:if="${session.user.role.id==1}"><a href="/admin/products"><i class="fas fa-boxes"></i> Product List</a></li>
         <li th:if="${session.user.role.id==3}"><a href="/sale"><i class="fas fa-boxes"></i> Product List</a></li>
+        <li th:if="${session.user.role.id==3}"><a href="/sale/orders"><i class="fas fa-boxes"></i> Order List</a></li>
+
     </ul>
 </div>

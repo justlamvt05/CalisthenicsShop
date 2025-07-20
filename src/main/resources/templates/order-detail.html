@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="margin-top: 150px">ORDER DETAILS</h2>
+
+    <div class="card mb-4" style="background-color: black">
+        <div class="card-body" style="background-color: black; color: white">
+            <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+            <p><strong>Order Date:</strong> <span th:text="${order.orderDate}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+        </div>
+    </div>
+
+    <h5>Items</h5>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${order.items}">
+            <td th:text="${item.sku.sku}"></td>
+            <td th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 2, 'COMMA')} + ' đ'"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(item.price * item.quantity, 1, 'POINT', 2, 'COMMA')} + ' đ'"></td>
+        </tr>
+        </tbody>
+        <tfoot style="background-color: #000000; color: white">
+        <tr>
+            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+            <td th:text="${#numbers.formatDecimal(order.total, 1, 'POINT', 2, 'COMMA')} + ' đ'"></td>
+        </tr>
+        </tfoot>
+    </table>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Address Line</th>
+            <th>City</th>
+            <th>Postal Code</th>
+            <th>Address Phone Number</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="address : ${addressList}">
+            <td th:text="${address.addressLine}">-</td>
+            <td th:text="${address.city}">-</td>
+            <td th:text="${address.postalCode}">-</td>
+            <td th:text="${address.phoneNumber}">-</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <h5>Your Payment ís done</h5>
+    </div>
+
+    <div class="text-center mt-3">
+        <a th:href="@{/customer}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+</html>

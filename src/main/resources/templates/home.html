@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+    <!-- Thêm CSS link vào head -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <style>
+        .hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-effect:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/headerhome :: header}"></div>
+<div class="container mt-5">
+    <div class="row row-cols-1 row-cols-md-4 g-4" style="margin-top: 150px">
+
+        <div class="col" th:each="product : ${products}">
+            <a th:href="@{'/product/' + ${product.id}}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-effect">
+                    <img th:src="@{${product.cover}}" class="card-img-top" alt="Product Image"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <p class="card-text text-success fw-bold" th:each="sku : ${product.skus}"
+                           th:text="${sku.price}+'$'"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-4 hover-effect">
+        <a style="background-color: #919191; border: #919191 solid 1px" href="/login" class="btn btn-primary btn-lg">Login To Discover More</a>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</div   >
+</body>
+</html>

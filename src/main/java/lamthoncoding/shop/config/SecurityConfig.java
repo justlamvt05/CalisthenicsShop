@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserService userService) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index", "/register/**", "/css/**", "/js/**", "/register").permitAll()
+                        .requestMatchers("/","/home","resources/**","static/**", "images/**", "/register/**", "/css/**", "/js/**", "/register").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/saler/**").hasRole("SALER")
@@ -33,7 +33,9 @@ public class SecurityConfig {
                         form -> form
                                 .loginPage("/login")//doGet
                                 .loginProcessingUrl("/login")//doPost
+                                .defaultSuccessUrl("/home", true)
                                 .failureHandler(new CustomAuthenticationFailureHandler())
+
                                 .successHandler(new CustomAuthenticationSuccessHandler(userService))
                                 .permitAll()
                 );
@@ -47,7 +49,7 @@ public class SecurityConfig {
 
     public static void main(String[] args) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        System.out.println(encoder.encode("1"));
+        System.out.println(encoder.encode("123456"));
         System.out.println("$2a$10$u9g9lCx3TrVWG/lKbWIzCOY16/tVox3Sel5hJdvSgzVqDjSILwFZm");
     }
 }

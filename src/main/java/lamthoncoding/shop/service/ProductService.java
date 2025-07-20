@@ -20,5 +20,9 @@ public interface ProductService {
     Product getProductById(int id);
 
     void addProduct(Product product, List<MultipartFile> images);
+    List<Product> getTop4Products();
+    List<Product> findRandomProducts();
+
+    List<Product> searchProductsByName(String name);
 }
 

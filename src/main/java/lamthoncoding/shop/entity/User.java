@@ -27,8 +27,8 @@ public class User {
     private String firstName;
     @Column(name = "last_name",nullable = false)
     private String lastName;
-    @Column(name = "avatar",nullable = false,columnDefinition = "VARCHAR(512) DEFAULT 'images/default-avatar.png'")
-    private String avatar;
+    @Column(name = "avatar", length = 512)
+    private String avatar = "images/default-avatar.png";
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)

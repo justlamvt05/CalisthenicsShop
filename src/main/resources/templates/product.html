@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}">Product Detail</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <style>
+        .product-title {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-detail-img {
+            width: 450px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            max-height: 450px;
+            object-fit: cover;
+        }
+
+        .product-thumbnails img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .product-thumbnails img:hover {
+            border-color: #007bff;
+        }
+        .hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-effect:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Main Content -->
+<main class="container mt-5 mb-5" >
+    <div class="row g-5">
+        <!-- Product Image -->
+        <div class="col-md-7 text-center" style="margin-top: 150px">
+            <img th:src="@{${product.cover}}" class="img-fluid product-detail-img mb-3" alt="Main Product Image">
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-5" style="margin-top: 150px">
+            <h1 class="product-title" th:text="${product.name}">Product Name</h1>
+            <p style="color: white" th:text="${product.description}">Product description here...</p>
+
+            <div class="mb-3" th:each="sku : ${product.skus}">
+                <p class="product-price" th:text="${sku.price} + ' $'">Price</p>
+                <p th:text="${sku.sizeAttribute.type+': '}+ ${sku.sizeAttribute.value} "></p>
+                <p th:text="'Quantity in stock: ' + ${sku.quantity}">Stock</p>
+            </div>
+
+            <!-- Buy Now Button -->
+            <form th:action="@{/cart/add}" method="post" class="mt-4">
+                <input type="hidden" name="skuId" th:value="${product.skus[0].id}"/>
+                <p>
+                    <label class="form-label" style="color: white">Quantity</label>
+                    <input type="number" name="quantity" value="1"/>
+                </p>
+                <button type="submit" class="btn btn-primary btn-lg hover-effect">
+                    <i class="fa fa-shopping-cart"></i>Add To Cart
+                </button>
+            </form>
+            <!-- Additional Images -->
+            <div class="d-flex justify-content-flex-start product-thumbnails flex-wrap" style="margin-top: 20px" th:if="${product.images != null}">
+                <img th:each="image : ${product.images}"
+                     th:src="@{${image.imageUrl}}" alt="Product Image">
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-5" style="margin-top: 150px;">
+        <h2>YOU MAY ALSO LIKE</h2>
+    </div>
+    <div id="product-list" class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+        <div class="col product-item" th:each="product, iterStat : ${products}">
+            <a th:href="@{'/product/' + ${product.id}}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-effect">
+                    <img th:src="@{${product.cover}}" class="card-img-top" alt="Product Image"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <p class="card-text text-success fw-bold"
+                           th:each="sku : ${product.skus}"
+                           th:text="${sku.price}+'$'"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/toggleSidebar.js}"></script>
+
+</body>
+</html>

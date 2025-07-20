@@ -3,10 +3,8 @@ package lamthoncoding.shop.controller;
 import jakarta.servlet.http.HttpSession;
 import lamthoncoding.shop.dto.ProductDTO;
 import lamthoncoding.shop.dto.UserDTO;
-import lamthoncoding.shop.entity.Product;
-import lamthoncoding.shop.entity.ProductAttribute;
-import lamthoncoding.shop.entity.ProductSku;
-import lamthoncoding.shop.entity.User;
+import lamthoncoding.shop.entity.*;
+import lamthoncoding.shop.service.OrderService;
 import lamthoncoding.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +31,10 @@ import java.util.Optional;
 
 public class SaleController {
     private static final String UPLOAD_DIR = "C:\\New folder\\product-img";
-
+    private final OrderService orderService;
     private final ProductService productService;
     @GetMapping("/sale")
+
     public String sale(@RequestParam(required = false) String searchText,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam(defaultValue = "10") int pageSize,
@@ -126,6 +125,21 @@ public class SaleController {
         return ResponseEntity.ok()
                 .header("Content-Type", contentType)
                 .body(imageBytes);
+    }
+    @GetMapping("/sale/orders")
+    public String viewOrders(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 5;
+        Page<Order> ordersPage = orderService.getAllOrdersPaged(page, pageSize);
+        model.addAttribute("orders", ordersPage.getContent());
+        model.addAttribute("totalPages", ordersPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        return "order-list";
+    }
+
+    @PostMapping("/sale/orders/{id}/status")
+    public String updateOrderStatus(@PathVariable int id, @RequestParam String status) {
+        orderService.changeStatus(id, status);
+        return "redirect:/sale/orders";
     }
 
 }

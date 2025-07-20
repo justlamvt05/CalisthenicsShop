@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findByStatusIsTrue();
     }
 
     @Override
@@ -244,4 +244,21 @@ public class ProductServiceImpl implements ProductService {
         product.setSkus(skus);
         productRepository.save(product);
     }
+
+    @Override
+    public List<Product> getTop4Products() {
+        return productRepository.findTop4(PageRequest.of(0, 4));
+    }
+
+    @Override
+    public List<Product> findRandomProducts() {
+
+        return productRepository.findRandomProducts(PageRequest.of(0, 4));
+    }
+
+    @Override
+    public List<Product> searchProductsByName(String name) {
+        return productRepository.searchByNameAndStatusTrue(name);
+    }
+
 }

@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lamthoncoding.shop.entity.User;
+import lamthoncoding.shop.service.ProductService;
 import lamthoncoding.shop.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,16 +19,18 @@ import java.time.LocalDate;
 @Controller
 
 public class AuthController {
-    private final UserService userService;
-
-    public AuthController(UserService userService) {
-        this.userService = userService;
-
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
+    @GetMapping("/")
+    public String redirectToHome() {
+        return "redirect:/home";
     }
-
-    @GetMapping
-    public String home() {
-        return "index";
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("products", productService.getTop4Products());
+        return "home";
     }
 
 

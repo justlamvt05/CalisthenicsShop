@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-5 mb-5" style="margin-top: 150px;">
+    <h2 style="margin-top: 150px">Checkout</h2>
+
+    <div th:if="${cart != null and #lists.size(cart.items) > 0}">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.productSku.sku}">Product Name</td>
+                <td th:text="${item.productSku.sizeAttribute.value}">Size</td>
+                <td th:text="${item.quantity}">1</td>
+                <td th:text="${item.subtotal}">100.0</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4 class="text-end" style="margin-top: 20px; margin-bottom: 20px">Total: <span th:text="${cart.total}">0.0</span></h4>
+        <h5>Address</h5>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Address Line</th>
+                <th>City</th>
+                <th>Postal Code</th>
+                <th>Address Phone Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="address : ${addressList}">
+                <td th:text="${address.addressLine}">-</td>
+                <td th:text="${address.city}">-</td>
+                <td th:text="${address.postalCode}">-</td>
+                <td th:text="${address.phoneNumber}">-</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center mt-4">
+            <h5>Scan QR to Pay</h5>
+            <img th:src="@{/images/frame.png}" alt="QR Code" style="width: 250px; height: 250px;">
+        </div>
+
+        <form th:action="@{/order/checkout}" method="post" class="mt-4 text-center">
+            <button class="btn btn-success">Confirm Payment</button>
+        </form>
+    </div>
+
+    <div th:if="${cart == null or #lists.isEmpty(cart.items)}">
+        <p>Your cart is empty.</p>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999" th:if="${toastNotification}" data-bs-delay="2000">
+    <div id="toast" class="toast align-items-center border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         th:classappend="${#strings.contains(toastNotification, 'successfully')} ? 'text-bg-success' : 'text-bg-danger'">
+        <div class="d-flex">
+            <div class="toast-body" th:text="${toastNotification}">Toast message</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElement = document.getElementById('toast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: 2000
+            });
+            toast.show();
+        }
+    });
+</script>
+</html>

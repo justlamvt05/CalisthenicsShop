@@ -113,6 +113,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/toggleSidebar.js}"></script>
-
+<script th:if="${session.user != null and session.user.role.id == 1}">
+    window.location.href = /*[[@{/admin/product}]]*/ "/admin/products/view";
+</script>
 </body>
 </html>

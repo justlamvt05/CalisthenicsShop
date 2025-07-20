@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<h2 style="margin-top: 150px">Search results for: "<span th:text="${searchKeyword}"></span>"</h2>
+<div class="container">
+    <div th:if="${#lists.isEmpty(products)}">
+        <p>No products found.</p>
+    </div>
+    <div id="product-list" class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+
+        <div class="col product-item" th:each="product : ${products}">
+            <a th:href="@{'/product/' + ${product.id}}" class="text-decoration-none text-dark">
+                <div class="card h-100 hover-effect">
+                    <img th:src="@{${product.cover}}" class="card-img-top" alt="Product Image"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        <p class="card-text text-success fw-bold"
+                           th:each="sku : ${product.skus}"
+                           th:text="${sku.price}+'$'"></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+</html>

@@ -325,15 +325,15 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Size</label>
-                                <input type="text" name="skus[0].sizeAttribute.value" class="form-control" placeholder="Size">
+                                <input type="text" name="skus[0].sizeAttribute.value" class="form-control" placeholder="Size" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Price</label>
-                                <input type="number" name="skus[0].price" class="form-control" placeholder="0.00" step="0.01">
+                                <input type="number" name="skus[0].price" class="form-control" placeholder="0.00" step="0.01" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Quantity</label>
-                                <input type="number" name="skus[0].quantity" class="form-control" placeholder="0">
+                                <input type="number" name="skus[0].quantity" class="form-control" placeholder="0" required>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Status</label>
@@ -345,9 +345,9 @@
                         </div>
                     </div>
 
-                    <button type="button" class="add-btn" onclick="addSkuRow()">
-                        <i class="fas fa-plus"></i> Add SKU
-                    </button>
+<!--                    <button type="button" class="add-btn" onclick="addSkuRow()">-->
+<!--                        <i class="fas fa-plus"></i> Add SKU-->
+<!--                    </button>-->
                 </div>
 
                 <div class="action-buttons">
@@ -386,61 +386,8 @@
         ImgElement.remove();
 
     }
-
-    let skuIndex = 1;
-
-    function updateSkuIndexes() {
-        const rows = document.querySelectorAll('.sku-row');
-        rows.forEach((row, index) => {
-            row.querySelectorAll('input, select').forEach((input) => {
-                const newName = input.name.replace(/skus\[\d+]/, `skus[${index}]`);
-                input.name = newName;
-            });
-        });
-        skuIndex = rows.length;
-    }
-
-    function addSkuRow() {
-        const container = document.getElementById('skuContainer');
-        const row = document.createElement('div');
-        row.className = 'row sku-row';
-        row.innerHTML = `
-            <div class="col-md-2">
-                <label class="form-label">SKU</label>
-                <input type="text" name="skus[${skuIndex}].sku" class="form-control" placeholder="SKU Code" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Size</label>
-                <input type="text" name="skus[${skuIndex}].sizeAttribute.value" class="form-control" placeholder="Size">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Price</label>
-                <input type="number" name="skus[${skuIndex}].price" class="form-control" placeholder="0.00" step="0.01">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Quantity</label>
-                <input type="number" name="skus[${skuIndex}].quantity" class="form-control" placeholder="0">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Status</label>
-                <select name="skus[${skuIndex}].status" class="form-select">
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                </select>
-            </div>
-            <button type="button" class="delete-btn" onclick="deleteSKURow(this.closest('.sku-row'))">
-                <i class="fas fa-trash"></i> Delete
-            </button>
-        `;
-        container.appendChild(row);
-        skuIndex++;
-    }
-
-    const deleteSKURow = (SKUElement) => {
-        SKUElement.remove();
-        updateSkuIndexes();
-    }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
