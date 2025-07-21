@@ -135,42 +135,49 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (sku_id) REFERENCES products_skus(id)
 );
+INSERT INTO roles (name,description,status ) VALUES
+('Admin', 'Admin', 1),
+('Customer', 'Customer', 1),
+('Sale', 'Customer', 1)
+
 
 INSERT INTO users (first_name, last_name, username, email, password, birth_of_date, phone_number, role_id, status) VALUES
-('Admin', 'System', 'admin', 'admin@gmail.com', '123456', '1990-01-01', '0901234567', 1, 1),
+-- Admin user
+('Admin', 'System', 'admin', 'admin@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1990-01-01', '0901234567', 1, 1),
 
 -- Customer users (role_id = 2)
-('John', 'Smith', 'johnsmith', 'johnsmith@gmail.com', 'password123', '1995-03-15', '0901111111', 2, 1),
-('Emily', 'Johnson', 'emilyjohnson', 'emilyjohnson@gmail.com', 'password123', '1992-07-22', '0902222222', 2, 1),
-('Michael', 'Brown', 'michaelbrown', 'michaelbrown@gmail.com', 'password123', '1988-11-08', '0903333333', 2, 1),
-('Sarah', 'Davis', 'sarahdavis', 'sarahdavis@gmail.com', 'password123', '1996-05-12', '0904444444', 2, 1),
-('David', 'Wilson', 'davidwilson', 'davidwilson@gmail.com', 'password123', '1993-09-25', '0905555555', 2, 1),
-('Jessica', 'Miller', 'jessicamiller', 'jessicamiller@gmail.com', 'password123', '1991-12-03', '0906666666', 2, 1),
-('James', 'Garcia', 'jamesgarcia', 'jamesgarcia@gmail.com', 'password123', '1994-02-18', '0907777777', 2, 1),
-('Ashley', 'Martinez', 'ashleymartinez', 'ashleymartinez@gmail.com', 'password123', '1989-06-30', '0908888888', 2, 1),
-('Christopher', 'Anderson', 'christopheranderson', 'christopheranderson@gmail.com', 'password123', '1997-04-14', '0909999999', 2, 1),
-('Amanda', 'Taylor', 'amandataylor', 'amandataylor@gmail.com', 'password123', '1990-08-07', '0910101010', 2, 1),
-('Matthew', 'Thomas', 'matthewthomas', 'matthewthomas@gmail.com', 'password123', '1985-10-21', '0911111111', 2, 1),
-('Jennifer', 'Jackson', 'jenniferjackson', 'jenniferjackson@gmail.com', 'password123', '1998-01-09', '0912121212', 2, 1),
-('Andrew', 'White', 'andrewwhite', 'andrewwhite@gmail.com', 'password123', '1987-03-17', '0913131313', 2, 1),
-('Nicole', 'Harris', 'nicoleharris', 'nicoleharris@gmail.com', 'password123', '1999-07-05', '0914141414', 2, 1),
-('Ryan', 'Clark', 'ryanclark', 'ryanclark@gmail.com', 'password123', '1986-11-23', '0915151515', 2, 1),
-('Stephanie', 'Lewis', 'stephanielewis', 'stephanielewis@gmail.com', 'password123', '1995-12-11', '0916161616', 2, 1),
-('Brandon', 'Robinson', 'brandonrobinson', 'brandonrobinson@gmail.com', 'password123', '1992-04-28', '0917171717', 2, 1),
-('Michelle', 'Walker', 'michellewalker', 'michellewalker@gmail.com', 'password123', '1993-08-16', '0918181818', 2, 1),
-('Kevin', 'Hall', 'kevinhall', 'kevinhall@gmail.com', 'password123', '1990-02-02', '0919191919', 2, 1),
-('Rachel', 'Allen', 'rachelallen', 'rachelallen@gmail.com', 'password123', '1996-06-19', '0920202020', 2, 1),
+('John', 'Smith', 'johnsmith', 'customer1@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1995-03-15', '0901111111', 2, 1),
+('Emily', 'Johnson', 'emilyjohnson', 'emilyjohnson@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1992-07-22', '0902222222', 2, 1),
+('Michael', 'Brown', 'michaelbrown', 'michaelbrown@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1988-11-08', '0903333333', 2, 1),
+('Sarah', 'Davis', 'sarahdavis', 'sarahdavis@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1996-05-12', '0904444444', 2, 1),
+('David', 'Wilson', 'davidwilson', 'davidwilson@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1993-09-25', '0905555555', 2, 1),
+('Jessica', 'Miller', 'jessicamiller', 'jessicamiller@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1991-12-03', '0906666666', 2, 1),
+('James', 'Garcia', 'jamesgarcia', 'jamesgarcia@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1994-02-18', '0907777777', 2, 1),
+('Ashley', 'Martinez', 'ashleymartinez', 'ashleymartinez@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1989-06-30', '0908888888', 2, 1),
+('Christopher', 'Anderson', 'christopheranderson', 'christopheranderson@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1997-04-14', '0909999999', 2, 1),
+('Amanda', 'Taylor', 'amandataylor', 'amandataylor@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1990-08-07', '0910101010', 2, 1),
+('Matthew', 'Thomas', 'matthewthomas', 'matthewthomas@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1985-10-21', '0911111111', 2, 1),
+('Jennifer', 'Jackson', 'jenniferjackson', 'jenniferjackson@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1998-01-09', '0912121212', 2, 1),
+('Andrew', 'White', 'andrewwhite', 'andrewwhite@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1987-03-17', '0913131313', 2, 1),
+('Nicole', 'Harris', 'nicoleharris', 'nicoleharris@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1999-07-05', '0914141414', 2, 1),
+('Ryan', 'Clark', 'ryanclark', 'ryanclark@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1986-11-23', '0915151515', 2, 1),
+('Stephanie', 'Lewis', 'stephanielewis', 'stephanielewis@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1995-12-11', '0916161616', 2, 1),
+('Brandon', 'Robinson', 'brandonrobinson', 'brandonrobinson@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1992-04-28', '0917171717', 2, 1),
+('Michelle', 'Walker', 'michellewalker', 'michellewalker@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1993-08-16', '0918181818', 2, 1),
+('Kevin', 'Hall', 'kevinhall', 'kevinhall@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1990-02-02', '0919191919', 2, 1),
+('Rachel', 'Allen', 'rachelallen', 'rachelallen@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1996-06-19', '0920202020', 2, 1),
 
 -- Sale users (role_id = 3)
-('Robert', 'Young', 'robertyoung_sale', 'robertyoung.sale@gmail.com', 'sale123', '1991-05-10', '0921212121', 3, 1),
-('Lisa', 'King', 'lisaking_sale', 'lisaking.sale@gmail.com', 'sale123', '1988-09-14', '0922222222', 3, 1),
-('Daniel', 'Wright', 'danielwright_sale', 'danielwright.sale@gmail.com', 'sale123', '1994-01-27', '0923232323', 3, 1),
-('Karen', 'Lopez', 'karenlopez_sale', 'karenlopez.sale@gmail.com', 'sale123', '1989-07-13', '0924242424', 3, 1),
-('Jason', 'Hill', 'jasonhill_sale', 'jasonhill.sale@gmail.com', 'sale123', '1992-11-06', '0925252525', 3, 1),
-('Nancy', 'Scott', 'nancyscott_sale', 'nancyscott.sale@gmail.com', 'sale123', '1987-03-20', '0926262626', 3, 1),
-('Mark', 'Green', 'markgreen_sale', 'markgreen.sale@gmail.com', 'sale123', '1995-08-08', '0927272727', 3, 1),
-('Sandra', 'Adams', 'sandraadams_sale', 'sandraadams.sale@gmail.com', 'sale123', '1993-12-24', '0928282828', 3, 1),
-('Paul', 'Baker', 'paulbaker_sale', 'paulbaker.sale@gmail.com', 'sale123', '1990-04-15', '0929292929', 3, 1);
+('Robert', 'Young', 'robertyoung_sale', 'robertyoung.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1991-05-10', '0921212121', 3, 1),
+('Lisa', 'King', 'lisaking_sale', 'lisaking.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1988-09-14', '0922222222', 3, 1),
+('Daniel', 'Wright', 'danielwright_sale', 'danielwright.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1994-01-27', '0923232323', 3, 1),
+('Karen', 'Lopez', 'karenlopez_sale', 'karenlopez.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1989-07-13', '0924242424', 3, 1),
+('Jason', 'Hill', 'jasonhill_sale', 'jasonhill.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1992-11-06', '0925252525', 3, 1),
+('Nancy', 'Scott', 'nancyscott_sale', 'nancyscott.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1987-03-20', '0926262626', 3, 1),
+('Mark', 'Green', 'markgreen_sale', 'markgreen.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1995-08-08', '0927272727', 3, 1),
+('Sandra', 'Adams', 'sandraadams_sale', 'sandraadams.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1993-12-24', '0928282828', 3, 1),
+('Paul', 'Baker', 'paulbaker_sale', 'paulbaker.sale@gmail.com', '$2a$10$hf0WG/cGs/EXtzoCjK/RYen0xkkWMw50pnTo6FoEleTmx.m8OXTSO', '1990-04-15', '0929292929', 3, 1);
+
 
 
 
