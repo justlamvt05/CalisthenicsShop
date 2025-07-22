@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: webshop
+    env: java
+    buildCommand: "./mvnw clean package"
+    startCommand: "java -jar target/quiz-system-0.0.1-SNAPSHOT.jar"
+    plan: free
+    region: singapore
+    envVars:
+      - key: JAVA_VERSION
+        value: 21
