@@ -58,7 +58,8 @@
         │   ├── application.properties
         │
         │── pom.xml
-        ⚙️ Installation & Setup
+        
+    ⚙️ Installation & Setup
     1. Clone the repository
     git clone https://github.com/justlamvt05/CalisthenicsShop.git
     cd CalisthenicsShop
